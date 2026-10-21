@@ -505,6 +505,7 @@ html[data-theme="dark"] .hero-watermark { opacity: 0.18; }
 .hero-grid {
   position: relative;
   z-index: 1;
+  margin-top: auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 348px;
   align-items: center;
