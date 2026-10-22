@@ -4,13 +4,6 @@
    ========================================================================== */
 
 @font-face {
-  font-family: "Noto Serif SC";
-  src: url("../fonts/noto-serif-sc-400.woff2") format("woff2");
-  font-weight: 400 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
   font-family: "Newsreader";
   /* The original filenames are reversed relative to the embedded styles. */
   src: url("../fonts/newsreader-italic-latin.woff2") format("woff2");
@@ -73,8 +66,8 @@
   --surface-shade: rgba(23, 21, 15, 0.12);
   --surface-glow: rgba(165, 131, 78, 0.22);
 
-  --serif: "Newsreader", "Noto Serif SC", "Songti SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
-  --sans: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --serif: "Newsreader", serif;
+  --sans: "Inter", sans-serif;
   --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
   --max: 1180px;
@@ -175,10 +168,6 @@ em { font-style: italic; }
   outline-offset: 3px;
   border-radius: 2px;
 }
-
-/* Bilingual visibility. English is the no-JS default. */
-html[lang="en"] [data-lang="zh"],
-html[lang="zh"] [data-lang="en"] { display: none !important; }
 
 .wrap {
   width: 100%;
@@ -314,20 +303,6 @@ body.menu-open .site-header { background: var(--paper); }
 .ctrl:hover { color: var(--ink); }
 .ctrl:focus-visible { color: var(--ink); background: var(--gold-soft); }
 .ctrl:active { transform: translateY(1px); }
-
-.lang-btn {
-  gap: 5px;
-  padding: 0 9px;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  font-family: var(--mono);
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-}
-.lang-btn span[data-lang-code] { transition: color 0.2s, opacity 0.2s; opacity: 0.45; }
-html[lang="en"] .lang-btn span[data-lang-code="en"],
-html[lang="zh"] .lang-btn span[data-lang-code="zh"] { opacity: 1; color: var(--ink); }
-.ctrl-sep { opacity: 0.3; font-size: 9px; }
 
 .icon-btn { width: 32px; position: relative; }
 .icon-btn svg {
@@ -591,10 +566,6 @@ html[data-theme="dark"] .aurora-3 { background: radial-gradient(circle at 50% 50
   }
   .hero-title:hover > span { background-position: 0 50%; }
   .hero-title > span::selection { color: var(--paper); }
-}
-html[lang="zh"] .hero-title {
-  letter-spacing: 0.02em;
-  font-size: clamp(3.5rem, 5.8vw, 5rem);
 }
 
 .hero-role {
@@ -913,7 +884,6 @@ html[lang="zh"] .hero-title {
   line-height: 1;
   letter-spacing: -0.025em;
 }
-html[lang="zh"] .section-title { letter-spacing: 0.02em; }
 :where(.reveal-ready) .section-head .section-title > span {
   display: inline-block;
   transform: translateY(115%);
@@ -973,12 +943,6 @@ html[lang="zh"] .section-title { letter-spacing: 0.02em; }
   padding: 0.08em 0.12em 0 0;
   color: var(--accent);
   font-weight: 400;
-}
-html[lang="zh"] .dropcap::first-letter {
-  float: none;
-  font-size: inherit;
-  padding: 0;
-  color: inherit;
 }
 .about-body em {
   font-family: var(--serif);
@@ -1352,7 +1316,6 @@ details[open] .plus { transform: rotate(45deg); }
   }
 }
 
-html[lang="zh"] .contact-title { letter-spacing: 0.01em; line-height: 1.12; }
 .contact-note {
   position: relative;
   max-width: 540px;
@@ -1563,7 +1526,7 @@ a.contact-value:hover, a.contact-value:focus-visible { color: var(--gold-ink); b
   --paper-2: #fbf8f1;
   --faint: #8c8270;
   --gold: #a5834e;
-  --serif: "Newsreader Published", "Noto Serif SC", "Songti SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  --serif: "Newsreader Published", serif;
 }
 html[data-theme="dark"] :is(#research, #projects) {
   --paper-2: #161714;
@@ -1641,7 +1604,7 @@ html[data-theme="dark"] :is(#research, #projects) {
 
   .hero { min-height: auto; padding-top: calc(var(--header-h) + 72px); padding-bottom: 24px; }
   .hero-grid { grid-template-columns: 1fr; gap: 54px; }
-  .hero-title, html[lang="zh"] .hero-title { font-size: clamp(3.2rem, 8vw, 4.8rem); }
+  .hero-title { font-size: clamp(3.2rem, 8vw, 4.8rem); }
   .hero-lede { max-width: 620px; }
   .dossier { max-width: 400px; width: 100%; }
   .hero-foot { padding-top: 54px; }
@@ -1692,7 +1655,6 @@ html[data-theme="dark"] :is(#research, #projects) {
 @media (max-width: 400px) {
   .hero-title { font-size: 3.4rem; }
   .dossier { padding-inline: 17px; }
-  .lang-btn { padding-inline: 7px; }
 }
 
 /* ── Print ──────────────────────────────────────────────────────────────── */

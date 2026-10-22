@@ -12,7 +12,6 @@
   var header = document.getElementById('siteHeader');
   var progressBar = document.getElementById('progressBar');
   var themeToggle = document.getElementById('themeToggle');
-  var langToggle = document.getElementById('langToggle');
   var menuToggle = document.getElementById('menuToggle');
   var nav = document.getElementById('primaryNav');
   var backdrop = document.getElementById('menuBackdrop');
@@ -21,7 +20,6 @@
   var year = document.getElementById('year');
 
   var theme = root.getAttribute('data-theme') || 'light';
-  var lang = root.getAttribute('lang') || 'en';
   var themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
   var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   var pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
@@ -38,7 +36,7 @@
       m.removeAttribute('media');
     });
     if (themeToggle) {
-      themeToggle.setAttribute('aria-label', lang === 'zh' ? (theme === 'dark' ? '切换浅色主题' : '切换深色主题') : (theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'));
+      themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
       themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
     }
     if (persist) {
@@ -78,30 +76,6 @@
     applyTheme(event.matches ? 'dark' : 'light', false);
   });
 
-  /* ── Language ────────────────────────────────────────────────────────── */
-  function applyLang(next, persist) {
-    lang = next;
-    root.setAttribute('lang', lang);
-    if (langToggle) {
-      langToggle.setAttribute('aria-label', lang === 'en' ? '切换至中文' : 'Switch to English');
-      langToggle.setAttribute('aria-pressed', lang === 'zh' ? 'true' : 'false');
-    }
-    if (persist) {
-      try { localStorage.setItem('hm-lang', lang); } catch (e) {}
-    }
-    closeMenu();
-    applyTheme(theme, false);
-    if (copyEmail) copyEmail.setAttribute('aria-label', lang === 'zh' ? '复制邮箱地址' : 'Copy email address');
-    if (sectionIds) requestScroll();
-  }
-
-  if (langToggle) {
-    langToggle.addEventListener('click', function () {
-      applyLang(lang === 'en' ? 'zh' : 'en', true);
-    });
-  }
-  applyLang(lang, false);
-
   /* ── Mobile menu ─────────────────────────────────────────────────────── */
   function setMenuBackground(inert) {
     if (backdrop) backdrop.hidden = !inert;
@@ -113,7 +87,7 @@
     setMenuBackground(true);
     if (menuToggle) {
       menuToggle.setAttribute('aria-expanded', 'true');
-      menuToggle.setAttribute('aria-label', lang === 'zh' ? '关闭导航' : 'Close menu');
+      menuToggle.setAttribute('aria-label', 'Close menu');
     }
     if (nav) nav.querySelector('a').focus();
   }
@@ -124,7 +98,7 @@
     setMenuBackground(false);
     if (menuToggle) {
       menuToggle.setAttribute('aria-expanded', 'false');
-      menuToggle.setAttribute('aria-label', lang === 'zh' ? '打开导航' : 'Open menu');
+      menuToggle.setAttribute('aria-label', 'Open menu');
       if (wasOpen && restoreFocus) menuToggle.focus();
     }
   }
@@ -249,17 +223,14 @@
 
   function showToast(success) {
     if (!toast) return;
-    toast.querySelector('[data-lang="en"]').textContent = success ? 'Email copied to clipboard' : 'Please select the email address to copy it';
-    toast.querySelector('[data-lang="zh"]').textContent = success ? '邮箱已复制到剪贴板' : '复制未成功，请选中邮箱复制';
+    toast.textContent = success ? 'Email copied to clipboard' : 'Please select the email address to copy it';
     if (success && copyEmail) {
       copyEmail.classList.add('is-copied');
-      copyEmail.querySelector('[data-lang="en"]').textContent = 'Copied';
-      copyEmail.querySelector('[data-lang="zh"]').textContent = '已复制';
+      copyEmail.querySelector('.copy-text').textContent = 'Copied';
       window.clearTimeout(copiedTimer);
       copiedTimer = window.setTimeout(function () {
         copyEmail.classList.remove('is-copied');
-        copyEmail.querySelector('[data-lang="en"]').textContent = 'Copy';
-        copyEmail.querySelector('[data-lang="zh"]').textContent = '复制';
+        copyEmail.querySelector('.copy-text').textContent = 'Copy';
       }, 2400);
     }
     toast.classList.add('is-visible');

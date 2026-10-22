@@ -8,7 +8,7 @@
 
 整体采用「学术索引卡 × 编辑排版」的方向：暖纸底色、衬线大标题、细线网格、印章红与暗金点缀。信息结构遵循主流学术主页的惯例（About / News / CV / Research / Projects / Contact），但视觉与交互做了更精致的处理：
 
-- 中英双语切换（`EN / 中`），偏好保存在 localStorage
+- 全英文界面，无语言切换
 - 明暗主题切换，跟随系统偏好，可手动覆盖
 - 自托管字体（Newsreader / Inter / JetBrains Mono），不依赖 Google Fonts，国内访问稳定
 - 墨色光晕、纸面颗粒、金色描边水印、衬线跑马灯
@@ -50,16 +50,7 @@ python -m http.server 8000
 
 ### 1. 文字内容
 
-所有内容都在 `index.html`。双语段落成对出现：
-
-```html
-<p>
-  <span data-lang="en">English text</span>
-  <span data-lang="zh">中文文本</span>
-</p>
-```
-
-只改其中一种语言也可以；CSS 会自动隐藏当前未选中的语言。若新增段落，记得两段都写，或至少保留英文。
+所有页面文案都在 `index.html` 中，直接维护英文内容即可；不再保留中文翻译或语言切换标记。
 
 ### 2. 新增一条研究经历
 
@@ -205,3 +196,12 @@ Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自
 - THUIR 经历的身份改为 Research Intern，中文同步改为科研实习生。
 
 ![简历身份与院系名称](assets/img/cv-affiliation.jpg)
+
+
+### 2026-10-22 · 全英文界面
+
+- 移除中文文案及语言切换按钮，页面固定为英文；旧语言偏好不再参与页面初始化。
+- 清理语言切换逻辑、中文样式和中文字体引用；原字体文件保留，不影响历史版本恢复。
+- 邮箱复制提示、主题和导航按钮的无障碍标签统一使用英文，保留明暗主题和其余交互。
+
+![全英文桌面界面](assets/img/english-only-desktop.jpg)
