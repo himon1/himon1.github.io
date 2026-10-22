@@ -744,7 +744,7 @@ html[lang="zh"] .hero-title {
 .dial-core { fill: var(--accent-soft); stroke: var(--gold-line); stroke-width: 0.7; }
 .dial-center { fill: var(--accent); }
 .dial-label { font-family: var(--mono); font-size: 5px; letter-spacing: 1.2px; fill: var(--muted); }
-.dial-orbit { transform-origin: 150px 112px; animation: spin 110s linear infinite; }
+.dial-orbit { transform-origin: 150px 112px; animation: spin 45s linear infinite; }
 
 .dossier-rows { border-top: 1px solid var(--rule); }
 .dossier-rows > div {
