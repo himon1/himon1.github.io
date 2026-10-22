@@ -178,4 +178,14 @@ Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自
 - 动态线场限制为每秒最多 16 次更新，离开首屏或切换到后台后停止，遵循系统减少动态效果偏好。
 - 已在桌面浏览器检查明暗主题、项目切换、键盘关闭和焦点恢复。
 
-![项目侧边预览](assets/img/project-preview-desktop.jpg)
+上述项目侧边预览已在下一轮撤回；截图文件仅保留历史参考。
+
+
+### 2026-10-22 · 恢复线上 Research 与 Selected projects
+
+- 已通过线上 HTML、CSS、JavaScript 内容比对确认，当前已部署版本对应 `cd50a53`。
+- 移除项目侧边预览、切换按钮、弹窗与事件拦截，项目卡片恢复直接跳转原 GitHub 地址。
+- Research 与 Selected projects 恢复线上内容结构、原有字体呈现、标题、卡片、明暗主题颜色与悬停效果；撤回这两区新增的标题揭幕、项目追光及摘要高度动画。
+- 其他区域保留当前状态；本轮仅恢复上述两个区域，不新增视觉或交互效果。
+
+![恢复后的项目区域](assets/img/restored-projects-desktop.jpg)

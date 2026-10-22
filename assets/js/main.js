@@ -301,7 +301,7 @@
   /* ── Surface light: one update per animation frame, no background loop ── */
   var dossier = document.getElementById('dossier');
   var surfaceResets = [];
-  document.querySelectorAll('.dossier, .project-card, .btn').forEach(function (surface) {
+  document.querySelectorAll('.dossier, .btn').forEach(function (surface) {
     var frame = null;
     var x = 0;
     var y = 0;
@@ -438,103 +438,6 @@
       if (fallbackThemeAnimation) fallbackThemeAnimation.cancel();
     }
   });
-
-  /* Project quick view: a native modal drawer sourced from the existing cards. */
-  if (typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype.showModal) {
-    var projectGrid = document.querySelector('.project-grid');
-    var preview = document.createElement('dialog');
-    preview.className = 'project-dialog';
-    preview.setAttribute('aria-labelledby', 'projectPreviewTitle');
-    preview.innerHTML = '<div class="dialog-panel"><header class="preview-header"><span class="mono preview-kicker"></span><button class="preview-close" type="button">×</button></header><div class="preview-content"></div><footer class="preview-footer"><a class="btn btn-primary preview-source" target="_blank" rel="noopener noreferrer"></a><div class="preview-switcher"><button class="preview-prev" type="button">←</button><span class="preview-counter mono"></span><button class="preview-next" type="button">→</button></div></footer></div>';
-    body.appendChild(preview);
-    var previewContent = preview.querySelector('.preview-content');
-    var previewClose = preview.querySelector('.preview-close');
-    var previewSource = preview.querySelector('.preview-source');
-    var previewCards = [];
-    var previewIndex = 0;
-    var previewTrigger = null;
-    var previewClosing = false;
-
-    function renderPreview(index) {
-      previewIndex = (index + previewCards.length) % previewCards.length;
-      var card = previewCards[previewIndex];
-      previewContent.replaceChildren();
-      var category = document.createElement('p');
-      category.className = 'mono preview-category';
-      category.textContent = card.querySelector('.project-top > span').textContent;
-      var title = document.createElement('h2');
-      title.id = 'projectPreviewTitle';
-      title.className = 'preview-title';
-      title.textContent = card.querySelector('h3').textContent;
-      var description = card.querySelector('p').cloneNode(true);
-      description.classList.add('preview-description');
-      previewContent.append(category, title, description);
-      var chips = card.querySelector('.chips');
-      if (chips) previewContent.appendChild(chips.cloneNode(true));
-      preview.querySelector('.preview-kicker').textContent = lang === 'zh' ? '项目预览' : 'Project preview';
-      previewClose.setAttribute('aria-label', lang === 'zh' ? '关闭项目预览' : 'Close project preview');
-      previewSource.href = card.href;
-      previewSource.textContent = lang === 'zh' ? '在 GitHub 查看 ↗' : 'View on GitHub ↗';
-      preview.querySelector('.preview-counter').textContent = String(previewIndex + 1).padStart(2, '0') + ' / ' + String(previewCards.length).padStart(2, '0');
-      preview.querySelector('.preview-prev').setAttribute('aria-label', lang === 'zh' ? '上一个项目' : 'Previous project');
-      preview.querySelector('.preview-next').setAttribute('aria-label', lang === 'zh' ? '下一个项目' : 'Next project');
-      preview.querySelectorAll('.preview-switcher button').forEach(function (button) { button.disabled = previewCards.length < 2; });
-      if (preview.open && !reduceMotion && previewContent.animate) {
-        previewContent.animate([{ opacity: 0, transform: 'translateX(10px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 220, easing: 'ease-out' });
-      }
-    }
-
-    function closePreview() {
-      if (!preview.open || previewClosing) return;
-      previewClosing = true;
-      var panel = preview.querySelector('.dialog-panel');
-      var current = getComputedStyle(panel);
-      var from = { opacity: current.opacity, transform: current.transform };
-      preview.classList.add('is-closing');
-      if (!reduceMotion && panel.animate) {
-        panel.animate([from, { opacity: 0, transform: 'translateX(48px)' }], { duration: 220, easing: 'ease-in', fill: 'forwards' }).finished.catch(function () {}).then(function () { preview.close(); });
-      } else preview.close();
-    }
-
-    preview.addEventListener('close', function () {
-      previewClosing = false;
-      preview.classList.remove('is-closing');
-      var panel = preview.querySelector('.dialog-panel');
-      if (panel.getAnimations) panel.getAnimations().forEach(function (animation) { animation.cancel(); });
-      body.classList.remove('preview-open');
-      if (previewTrigger && previewTrigger.isConnected) previewTrigger.focus({ preventScroll: true });
-    });
-    preview.addEventListener('cancel', function (event) { event.preventDefault(); closePreview(); });
-    preview.addEventListener('click', function (event) { if (event.target === preview) closePreview(); });
-    previewClose.addEventListener('click', closePreview);
-    preview.querySelector('.preview-prev').addEventListener('click', function () { renderPreview(previewIndex - 1); });
-    preview.querySelector('.preview-next').addEventListener('click', function () { renderPreview(previewIndex + 1); });
-    preview.addEventListener('keydown', function (event) {
-      if (event.key === 'ArrowLeft') { event.preventDefault(); renderPreview(previewIndex - 1); }
-      if (event.key === 'ArrowRight') { event.preventDefault(); renderPreview(previewIndex + 1); }
-    });
-
-    if (projectGrid) {
-      projectGrid.querySelectorAll('.project-card').forEach(function (card) {
-        card.setAttribute('aria-haspopup', 'dialog');
-        var cue = document.createElement('span');
-        cue.className = 'project-preview-cue mono';
-        cue.innerHTML = '<span><span data-lang="en">Quick view</span><span data-lang="zh">快速预览</span></span><span aria-hidden="true">→</span>';
-        card.appendChild(cue);
-        card.querySelector('.project-arrow').textContent = '+';
-      });
-      projectGrid.addEventListener('click', function (event) {
-        var card = event.target.closest('.project-card');
-        if (!card || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.defaultPrevented) return;
-        previewCards = Array.prototype.slice.call(projectGrid.querySelectorAll('.project-card'));
-        renderPreview(previewCards.indexOf(card));
-        previewTrigger = card;
-        try { preview.showModal(); } catch (e) { return; }
-        event.preventDefault();
-        body.classList.add('preview-open');
-      });
-    }
-  }
 
   /* ── Misc ────────────────────────────────────────────────────────────── */
   if (year) year.textContent = String(new Date().getFullYear());
