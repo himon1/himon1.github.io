@@ -92,7 +92,6 @@
     closeMenu();
     applyTheme(theme, false);
     if (copyEmail) copyEmail.setAttribute('aria-label', lang === 'zh' ? '复制邮箱地址' : 'Copy email address');
-    if (dialStage && dialStage.classList.contains('is-interactive')) dialStage.setAttribute('title', lang === 'zh' ? '拖动旋转' : 'Drag to rotate');
     if (sectionIds) requestScroll();
   }
 
@@ -301,7 +300,6 @@
 
   /* ── Surface light: one update per animation frame, no background loop ── */
   var dossier = document.getElementById('dossier');
-  var dialStage = document.querySelector('.mark');
   var surfaceResets = [];
   document.querySelectorAll('.dossier, .project-card, .btn').forEach(function (surface) {
     var frame = null;
@@ -334,7 +332,7 @@
           surface.style.setProperty('--pull-x', ((px - 0.5) * 10).toFixed(1) + 'px');
           surface.style.setProperty('--pull-y', ((py - 0.5) * 6).toFixed(1) + 'px');
         }
-        if (surface === dossier && !(dialStage && dialStage.classList.contains('is-dragging'))) {
+        if (surface === dossier) {
           surface.style.transform = 'perspective(1200px) rotateX(' + ((0.5 - py) * 1.6).toFixed(2) + 'deg) rotateY(' + ((px - 0.5) * 2).toFixed(2) + 'deg)';
         }
       });
@@ -344,79 +342,51 @@
     surfaceResets.push(resetSurface);
   });
 
-  /* Decorative dial: phase-preserving hover acceleration and direct rotation. */
-  if (dialStage) {
-    var dialPointer = null;
-    var previousAngle = 0;
-    var dialAngle = 0;
-    var dialFrame = null;
+  /* Flowing engraved lines: 14 paths, capped at 16 updates/s while visible. */
+  var flow = document.querySelector('.hero-flow');
+  var flowPaths = flow ? flow.querySelectorAll('path') : [];
+  var flowFrame = null;
+  var flowLast = 0;
+  var flowPhase = 0;
+  var flowVisible = !!hero && hero.getBoundingClientRect().bottom > 0;
+  var flowTargetX = 0.5;
+  var flowTargetY = 0;
+  var flowX = 0.5;
+  var flowY = 0;
 
-    function setDialRate(rate) {
-      dialStage.querySelectorAll('.dial-orbit, .dial-counter').forEach(function (orbit) {
-        if (!orbit.getAnimations) return;
-        orbit.getAnimations().forEach(function (animation) {
-          if (animation.updatePlaybackRate) animation.updatePlaybackRate(rate);
-        });
+  function flowAllowed() { return flow && flowVisible && !reduceMotion && !document.hidden; }
+  function paintFlow(time) {
+    flowFrame = null;
+    if (!flowAllowed()) return;
+    if (!flowLast || time - flowLast >= 62.5) {
+      flowPhase += flowLast ? Math.min(time - flowLast, 100) * 0.00035 : 0;
+      flowLast = time;
+      flowX += (flowTargetX - flowX) * 0.16;
+      flowY += (flowTargetY - flowY) * 0.16;
+      flowPaths.forEach(function (path, index) {
+        var d = '';
+        for (var point = 0; point < 49; point += 1) {
+          var x = -80 + point * 32.5;
+          var distance = (x / 1400 - flowX) * 3;
+          var y = 520 + index * 13 + Math.sin(x * 0.0042 + flowPhase) * 58 + Math.sin(x * 0.0018 - flowPhase * 0.45) * 36 + Math.exp(-distance * distance) * flowY;
+          d += (point ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+        }
+        path.setAttribute('d', d);
       });
     }
-
-    function pointerAngle(event) {
-      var center = dialStage.querySelector('.dial-center').getBoundingClientRect();
-      return Math.atan2(event.clientY - center.top - center.height / 2, event.clientX - center.left - center.width / 2) * 180 / Math.PI;
-    }
-
-    function finishDial() {
-      if (dialFrame !== null) window.cancelAnimationFrame(dialFrame);
-      dialFrame = null;
-      dialStage.style.setProperty('--dial-angle', dialAngle.toFixed(2) + 'deg');
-      var pointer = dialPointer;
-      dialPointer = null;
-      dialStage.classList.remove('is-dragging');
-      if (pointer !== null && dialStage.hasPointerCapture(pointer)) dialStage.releasePointerCapture(pointer);
-      setDialRate(!reduceMotion && pointerQuery.matches && dialStage.matches(':hover') ? 2.2 : 1);
-    }
-
-    function updateDialAvailability() {
-      var enabled = !motionQuery.matches && pointerQuery.matches;
-      dialStage.classList.toggle('is-interactive', enabled);
-      if (enabled) dialStage.setAttribute('title', lang === 'zh' ? '拖动旋转' : 'Drag to rotate');
-      else dialStage.removeAttribute('title');
-      if (!enabled) finishDial();
-    }
-
-    dialStage.addEventListener('pointerenter', function () {
-      if (!reduceMotion && pointerQuery.matches) setDialRate(2.2);
-    });
-    dialStage.addEventListener('pointerleave', function () { setDialRate(1); });
-    dialStage.addEventListener('pointerdown', function (event) {
-      if (reduceMotion || !pointerQuery.matches || event.button !== 0) return;
-      dialPointer = event.pointerId;
-      if (dossier) dossier.style.transform = '';
-      previousAngle = pointerAngle(event);
-      dialStage.classList.add('is-dragging');
-      dialStage.setPointerCapture(event.pointerId);
-      event.preventDefault();
-    });
-    dialStage.addEventListener('pointermove', function (event) {
-      if (event.pointerId !== dialPointer) return;
-      var angle = pointerAngle(event);
-      var delta = ((angle - previousAngle + 540) % 360) - 180;
-      dialAngle += delta;
-      previousAngle = angle;
-      if (dialFrame !== null) return;
-      dialFrame = window.requestAnimationFrame(function () {
-        dialFrame = null;
-        dialStage.style.setProperty('--dial-angle', dialAngle.toFixed(2) + 'deg');
-      });
-    });
-    dialStage.addEventListener('pointerup', finishDial);
-    dialStage.addEventListener('pointercancel', finishDial);
-    dialStage.addEventListener('lostpointercapture', function () { if (dialPointer !== null) finishDial(); });
-    pointerQuery.addEventListener('change', updateDialAvailability);
-    motionQuery.addEventListener('change', updateDialAvailability);
-    updateDialAvailability();
-    surfaceResets.push(finishDial);
+    flowFrame = window.requestAnimationFrame(paintFlow);
   }
+  function updateFlow() {
+    if (flowAllowed()) {
+      if (flowFrame === null) { flowLast = 0; flowFrame = window.requestAnimationFrame(paintFlow); }
+    } else {
+      if (flowFrame !== null) window.cancelAnimationFrame(flowFrame);
+      flowFrame = null;
+      flowLast = 0;
+    }
+  }
+  document.addEventListener('visibilitychange', updateFlow);
+  updateFlow();
 
   if (hero) {
     var heroFrame = null;
@@ -426,6 +396,8 @@
       if (heroFrame !== null) window.cancelAnimationFrame(heroFrame);
       heroFrame = null;
       hero.classList.remove('is-lit');
+      flowTargetX = 0.5;
+      flowTargetY = 0;
     }
     hero.addEventListener('pointermove', function (event) {
       if (reduceMotion || !pointerQuery.matches) return;
@@ -437,6 +409,8 @@
         var rect = hero.getBoundingClientRect();
         hero.style.setProperty('--light-x', ((lightX - rect.left) / rect.width * 100).toFixed(1) + '%');
         hero.style.setProperty('--light-y', ((lightY - rect.top) / rect.height * 100).toFixed(1) + '%');
+        flowTargetX = (lightX - rect.left) / rect.width;
+        flowTargetY = ((lightY - rect.top) / rect.height - 0.5) * 80;
         hero.classList.add('is-lit');
       });
     });
@@ -446,6 +420,8 @@
     if ('IntersectionObserver' in window) {
       var ambientObserver = new IntersectionObserver(function (entries) {
         hero.classList.toggle('is-dormant', !entries[0].isIntersecting);
+        flowVisible = entries[0].isIntersecting;
+        updateFlow();
       });
       ambientObserver.observe(hero);
     }
@@ -453,6 +429,7 @@
 
   motionQuery.addEventListener('change', function (event) {
     reduceMotion = event.matches;
+    updateFlow();
     if (reduceMotion) {
       root.classList.remove('reveal-ready');
       if (hero) hero.style.removeProperty('--py');
@@ -461,6 +438,103 @@
       if (fallbackThemeAnimation) fallbackThemeAnimation.cancel();
     }
   });
+
+  /* Project quick view: a native modal drawer sourced from the existing cards. */
+  if (typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype.showModal) {
+    var projectGrid = document.querySelector('.project-grid');
+    var preview = document.createElement('dialog');
+    preview.className = 'project-dialog';
+    preview.setAttribute('aria-labelledby', 'projectPreviewTitle');
+    preview.innerHTML = '<div class="dialog-panel"><header class="preview-header"><span class="mono preview-kicker"></span><button class="preview-close" type="button">×</button></header><div class="preview-content"></div><footer class="preview-footer"><a class="btn btn-primary preview-source" target="_blank" rel="noopener noreferrer"></a><div class="preview-switcher"><button class="preview-prev" type="button">←</button><span class="preview-counter mono"></span><button class="preview-next" type="button">→</button></div></footer></div>';
+    body.appendChild(preview);
+    var previewContent = preview.querySelector('.preview-content');
+    var previewClose = preview.querySelector('.preview-close');
+    var previewSource = preview.querySelector('.preview-source');
+    var previewCards = [];
+    var previewIndex = 0;
+    var previewTrigger = null;
+    var previewClosing = false;
+
+    function renderPreview(index) {
+      previewIndex = (index + previewCards.length) % previewCards.length;
+      var card = previewCards[previewIndex];
+      previewContent.replaceChildren();
+      var category = document.createElement('p');
+      category.className = 'mono preview-category';
+      category.textContent = card.querySelector('.project-top > span').textContent;
+      var title = document.createElement('h2');
+      title.id = 'projectPreviewTitle';
+      title.className = 'preview-title';
+      title.textContent = card.querySelector('h3').textContent;
+      var description = card.querySelector('p').cloneNode(true);
+      description.classList.add('preview-description');
+      previewContent.append(category, title, description);
+      var chips = card.querySelector('.chips');
+      if (chips) previewContent.appendChild(chips.cloneNode(true));
+      preview.querySelector('.preview-kicker').textContent = lang === 'zh' ? '项目预览' : 'Project preview';
+      previewClose.setAttribute('aria-label', lang === 'zh' ? '关闭项目预览' : 'Close project preview');
+      previewSource.href = card.href;
+      previewSource.textContent = lang === 'zh' ? '在 GitHub 查看 ↗' : 'View on GitHub ↗';
+      preview.querySelector('.preview-counter').textContent = String(previewIndex + 1).padStart(2, '0') + ' / ' + String(previewCards.length).padStart(2, '0');
+      preview.querySelector('.preview-prev').setAttribute('aria-label', lang === 'zh' ? '上一个项目' : 'Previous project');
+      preview.querySelector('.preview-next').setAttribute('aria-label', lang === 'zh' ? '下一个项目' : 'Next project');
+      preview.querySelectorAll('.preview-switcher button').forEach(function (button) { button.disabled = previewCards.length < 2; });
+      if (preview.open && !reduceMotion && previewContent.animate) {
+        previewContent.animate([{ opacity: 0, transform: 'translateX(10px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 220, easing: 'ease-out' });
+      }
+    }
+
+    function closePreview() {
+      if (!preview.open || previewClosing) return;
+      previewClosing = true;
+      var panel = preview.querySelector('.dialog-panel');
+      var current = getComputedStyle(panel);
+      var from = { opacity: current.opacity, transform: current.transform };
+      preview.classList.add('is-closing');
+      if (!reduceMotion && panel.animate) {
+        panel.animate([from, { opacity: 0, transform: 'translateX(48px)' }], { duration: 220, easing: 'ease-in', fill: 'forwards' }).finished.catch(function () {}).then(function () { preview.close(); });
+      } else preview.close();
+    }
+
+    preview.addEventListener('close', function () {
+      previewClosing = false;
+      preview.classList.remove('is-closing');
+      var panel = preview.querySelector('.dialog-panel');
+      if (panel.getAnimations) panel.getAnimations().forEach(function (animation) { animation.cancel(); });
+      body.classList.remove('preview-open');
+      if (previewTrigger && previewTrigger.isConnected) previewTrigger.focus({ preventScroll: true });
+    });
+    preview.addEventListener('cancel', function (event) { event.preventDefault(); closePreview(); });
+    preview.addEventListener('click', function (event) { if (event.target === preview) closePreview(); });
+    previewClose.addEventListener('click', closePreview);
+    preview.querySelector('.preview-prev').addEventListener('click', function () { renderPreview(previewIndex - 1); });
+    preview.querySelector('.preview-next').addEventListener('click', function () { renderPreview(previewIndex + 1); });
+    preview.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') { event.preventDefault(); renderPreview(previewIndex - 1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); renderPreview(previewIndex + 1); }
+    });
+
+    if (projectGrid) {
+      projectGrid.querySelectorAll('.project-card').forEach(function (card) {
+        card.setAttribute('aria-haspopup', 'dialog');
+        var cue = document.createElement('span');
+        cue.className = 'project-preview-cue mono';
+        cue.innerHTML = '<span><span data-lang="en">Quick view</span><span data-lang="zh">快速预览</span></span><span aria-hidden="true">→</span>';
+        card.appendChild(cue);
+        card.querySelector('.project-arrow').textContent = '+';
+      });
+      projectGrid.addEventListener('click', function (event) {
+        var card = event.target.closest('.project-card');
+        if (!card || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.defaultPrevented) return;
+        previewCards = Array.prototype.slice.call(projectGrid.querySelectorAll('.project-card'));
+        renderPreview(previewCards.indexOf(card));
+        previewTrigger = card;
+        try { preview.showModal(); } catch (e) { return; }
+        event.preventDefault();
+        body.classList.add('preview-open');
+      });
+    }
+  }
 
   /* ── Misc ────────────────────────────────────────────────────────────── */
   if (year) year.textContent = String(new Date().getFullYear());
