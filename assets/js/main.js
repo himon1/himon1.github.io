@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Hao Mu — site behaviour
+   Mu Hao — site behaviour
    No dependencies. Everything degrades gracefully without JavaScript.
    ========================================================================== */
 
@@ -26,6 +26,7 @@
   var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   var pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
   var reduceMotion = motionQuery.matches;
+  var themeTransition = null;
 
   /* ── Theme ───────────────────────────────────────────────────────────── */
   function applyTheme(next, persist) {
@@ -46,7 +47,17 @@
 
   if (themeToggle) {
     themeToggle.addEventListener('click', function () {
-      applyTheme(theme === 'dark' ? 'light' : 'dark', true);
+      var next = theme === 'dark' ? 'light' : 'dark';
+      if (themeTransition) themeTransition.skipTransition();
+      if (document.startViewTransition && !reduceMotion) {
+        var transition = document.startViewTransition(function () { applyTheme(next, true); });
+        themeTransition = transition;
+        transition.finished.catch(function () {}).then(function () {
+          if (themeTransition === transition) themeTransition = null;
+        });
+      } else {
+        applyTheme(next, true);
+      }
     });
   }
   applyTheme(theme, false);
@@ -213,7 +224,7 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px -4% 0px', threshold: 0.08 });
     reveals.forEach(function (el) { observer.observe(el); });
     root.classList.add('reveal-ready');
   } else {
@@ -222,11 +233,23 @@
 
   /* ── Copy email ──────────────────────────────────────────────────────── */
   var toastTimer = null;
+  var copiedTimer = null;
 
   function showToast(success) {
     if (!toast) return;
     toast.querySelector('[data-lang="en"]').textContent = success ? 'Email copied to clipboard' : 'Please select the email address to copy it';
     toast.querySelector('[data-lang="zh"]').textContent = success ? '邮箱已复制到剪贴板' : '复制未成功，请选中邮箱复制';
+    if (success && copyEmail) {
+      copyEmail.classList.add('is-copied');
+      copyEmail.querySelector('[data-lang="en"]').textContent = 'Copied';
+      copyEmail.querySelector('[data-lang="zh"]').textContent = '已复制';
+      window.clearTimeout(copiedTimer);
+      copiedTimer = window.setTimeout(function () {
+        copyEmail.classList.remove('is-copied');
+        copyEmail.querySelector('[data-lang="en"]').textContent = 'Copy';
+        copyEmail.querySelector('[data-lang="zh"]').textContent = '复制';
+      }, 2400);
+    }
     toast.classList.add('is-visible');
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(function () {
@@ -263,23 +286,75 @@
     });
   }
 
-  /* ── Dossier: light follows the pointer, card tilts a little ─────────── */
+  /* ── Surface light: one update per animation frame, no background loop ── */
   var dossier = document.getElementById('dossier');
-  if (dossier) {
-    dossier.addEventListener('pointermove', function (event) {
+  var surfaceResets = [];
+  document.querySelectorAll('.dossier, .project-card').forEach(function (surface) {
+    var frame = null;
+    var x = 0;
+    var y = 0;
+
+    function resetSurface() {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      frame = null;
+      surface.style.removeProperty('--mx');
+      surface.style.removeProperty('--my');
+      if (surface === dossier) surface.style.transform = '';
+    }
+
+    surface.addEventListener('pointermove', function (event) {
       if (reduceMotion || !pointerQuery.matches) return;
-      var rect = dossier.getBoundingClientRect();
-      var px = (event.clientX - rect.left) / rect.width;
-      var py = (event.clientY - rect.top) / rect.height;
-      dossier.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-      dossier.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-      var rx = (0.5 - py) * 3.2;
-      var ry = (px - 0.5) * 4.2;
-      dossier.style.transform = 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+      x = event.clientX;
+      y = event.clientY;
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(function () {
+        frame = null;
+        var rect = surface.getBoundingClientRect();
+        var px = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+        var py = Math.max(0, Math.min(1, (y - rect.top) / rect.height));
+        surface.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        surface.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+        if (surface === dossier) {
+          surface.style.transform = 'perspective(1200px) rotateX(' + ((0.5 - py) * 1.6).toFixed(2) + 'deg) rotateY(' + ((px - 0.5) * 2).toFixed(2) + 'deg)';
+        }
+      });
     });
-    dossier.addEventListener('pointerleave', function () {
-      dossier.style.transform = '';
+    surface.addEventListener('pointerleave', resetSurface);
+    surface.addEventListener('pointercancel', resetSurface);
+    surfaceResets.push(resetSurface);
+  });
+
+  if (hero) {
+    var heroFrame = null;
+    var lightX = 0;
+    var lightY = 0;
+    function resetHeroLight() {
+      if (heroFrame !== null) window.cancelAnimationFrame(heroFrame);
+      heroFrame = null;
+      hero.classList.remove('is-lit');
+    }
+    hero.addEventListener('pointermove', function (event) {
+      if (reduceMotion || !pointerQuery.matches) return;
+      lightX = event.clientX;
+      lightY = event.clientY;
+      if (heroFrame !== null) return;
+      heroFrame = window.requestAnimationFrame(function () {
+        heroFrame = null;
+        var rect = hero.getBoundingClientRect();
+        hero.style.setProperty('--light-x', ((lightX - rect.left) / rect.width * 100).toFixed(1) + '%');
+        hero.style.setProperty('--light-y', ((lightY - rect.top) / rect.height * 100).toFixed(1) + '%');
+        hero.classList.add('is-lit');
+      });
     });
+    hero.addEventListener('pointerleave', resetHeroLight);
+    surfaceResets.push(resetHeroLight);
+
+    if ('IntersectionObserver' in window) {
+      var ambientObserver = new IntersectionObserver(function (entries) {
+        hero.classList.toggle('is-dormant', !entries[0].isIntersecting);
+      });
+      ambientObserver.observe(hero);
+    }
   }
 
   motionQuery.addEventListener('change', function (event) {
@@ -287,7 +362,8 @@
     if (reduceMotion) {
       root.classList.remove('reveal-ready');
       if (hero) hero.style.removeProperty('--py');
-      if (dossier) dossier.style.transform = '';
+      surfaceResets.forEach(function (reset) { reset(); });
+      if (themeTransition) themeTransition.skipTransition();
     }
   });
 
