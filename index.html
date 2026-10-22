@@ -26,7 +26,7 @@
   <link rel="preload" href="assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/newsreader-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=restore-sections">
+  <link rel="stylesheet" href="assets/css/style.css?v=cv-contact">
 
   <script>
     // Apply the saved theme and language before first paint to avoid a flash.
@@ -73,9 +73,9 @@
       <nav class="nav" id="primaryNav" aria-label="Sections">
         <a href="#about" data-section="about"><span data-lang="en">About</span><span data-lang="zh">关于</span></a>
         <a href="#news" data-section="news"><span data-lang="en">News</span><span data-lang="zh">动态</span></a>
+        <a href="#cv" data-section="cv"><span data-lang="en">CV</span><span data-lang="zh">简历</span></a>
         <a href="#research" data-section="research"><span data-lang="en">Research</span><span data-lang="zh">研究</span></a>
         <a href="#projects" data-section="projects"><span data-lang="en">Projects</span><span data-lang="zh">项目</span></a>
-        <a href="#cv" data-section="cv"><span data-lang="en">CV</span><span data-lang="zh">简历</span></a>
         <a href="#contact" data-section="contact"><span data-lang="en">Contact</span><span data-lang="zh">联系</span></a>
       </nav>
 
@@ -100,9 +100,9 @@
   <nav class="side-rail" id="sideRail" aria-label="Section index">
     <a href="#about" data-section="about"><span class="rail-label"><span data-lang="en">About</span><span data-lang="zh">关于</span></span><span class="rail-dot"></span></a>
     <a href="#news" data-section="news"><span class="rail-label"><span data-lang="en">News</span><span data-lang="zh">动态</span></span><span class="rail-dot"></span></a>
+    <a href="#cv" data-section="cv"><span class="rail-label"><span data-lang="en">CV</span><span data-lang="zh">简历</span></span><span class="rail-dot"></span></a>
     <a href="#research" data-section="research"><span class="rail-label"><span data-lang="en">Research</span><span data-lang="zh">研究</span></span><span class="rail-dot"></span></a>
     <a href="#projects" data-section="projects"><span class="rail-label"><span data-lang="en">Work</span><span data-lang="zh">项目</span></span><span class="rail-dot"></span></a>
-    <a href="#cv" data-section="cv"><span class="rail-label"><span data-lang="en">CV</span><span data-lang="zh">简历</span></span><span class="rail-dot"></span></a>
     <a href="#contact" data-section="contact"><span class="rail-label"><span data-lang="en">Contact</span><span data-lang="zh">联系</span></span><span class="rail-dot"></span></a>
   </nav>
 
@@ -323,11 +323,50 @@
       </div>
     </section>
 
+    <!-- ───────────────────────────── CV ───────────────────────────── -->
+    <section class="section" id="cv">
+      <div class="wrap">
+        <header class="section-head reveal">
+          <span class="section-no">03</span>
+          <h2 class="section-title"><span data-lang="en">Curriculum vitae</span><span data-lang="zh">简历</span></h2>
+          <span class="section-rule" aria-hidden="true"></span>
+          <span class="section-note mono"><span data-lang="en">Updated 2026.10</span><span data-lang="zh">更新于 2026.10</span></span>
+        </header>
+
+        <div class="cv-list">
+          <article class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <h3>Tsinghua University</h3>
+              <span class="mono">2025 — 2029</span>
+            </div>
+            <p class="cv-sub"><span data-lang="en">B.Eng. in Computer Science</span><span data-lang="zh">计算机科学与技术 · 本科</span></p>
+            <p class="cv-desc">
+              <span data-lang="en">Coursework: Programming Practice, Object-Oriented Programming, Data Structures.</span>
+              <span data-lang="zh">主修课程：程序设计训练、面向对象程序设计、数据结构。</span>
+            </p>
+          </article>
+
+          <article class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <h3>THUIR · Tsinghua</h3>
+              <span class="mono">2026.06 —</span>
+            </div>
+            <p class="cv-sub"><span data-lang="en">Undergraduate Researcher</span><span data-lang="zh">本科生科研</span></p>
+            <p class="cv-desc">
+              <span data-lang="en">LLM memory and evaluation; continual learning from long-horizon feedback.</span>
+              <span data-lang="zh">大模型记忆与评测；长程反馈驱动的持续学习。</span>
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
     <!-- ─────────────────────────── RESEARCH ─────────────────────────── -->
     <section class="section" id="research">
       <div class="wrap">
         <header class="section-head reveal">
-          <span class="section-no">03</span>
+          <span class="section-no">04</span>
           <h2 class="section-title"><span data-lang="en">Research</span><span data-lang="zh">研究</span></h2>
           <span class="section-rule" aria-hidden="true"></span>
           <span class="section-note mono"><span data-lang="en">Questions I keep returning to</span><span data-lang="zh">持续追问的问题</span></span>
@@ -428,7 +467,7 @@
     <section class="section" id="projects">
       <div class="wrap">
         <header class="section-head reveal">
-          <span class="section-no">04</span>
+          <span class="section-no">05</span>
           <h2 class="section-title"><span data-lang="en">Selected projects</span><span data-lang="zh">项目</span></h2>
           <span class="section-rule" aria-hidden="true"></span>
           <span class="section-note mono"><span data-lang="en">Built to understand</span><span data-lang="zh">为了理解而造</span></span>
@@ -471,72 +510,18 @@
       </div>
     </section>
 
-    <!-- ───────────────────────────── CV ───────────────────────────── -->
-    <section class="section" id="cv">
-      <div class="wrap">
-        <header class="section-head reveal">
-          <span class="section-no">05</span>
-          <h2 class="section-title"><span data-lang="en">Curriculum vitae</span><span data-lang="zh">简历</span></h2>
-          <span class="section-rule" aria-hidden="true"></span>
-          <span class="section-note mono"><span data-lang="en">Updated 2026.10</span><span data-lang="zh">更新于 2026.10</span></span>
-        </header>
-
-        <div class="cv-grid">
-          <div class="cv-block reveal">
-            <h3 class="mono cv-label"><span data-lang="en">Education</span><span data-lang="zh">教育背景</span></h3>
-            <div class="cv-entry">
-              <div class="cv-entry-head">
-                <strong>Tsinghua University</strong>
-                <span class="mono">2025 — 2029</span>
-              </div>
-              <p class="cv-sub"><span data-lang="en">B.Eng. in Computer Science</span><span data-lang="zh">计算机科学与技术 · 本科</span></p>
-              <p class="cv-desc">
-                <span data-lang="en">Coursework: Programming Practice, Object-Oriented Programming, Data Structures.</span>
-                <span data-lang="zh">主修课程：程序设计训练、面向对象程序设计、数据结构。</span>
-              </p>
-            </div>
-          </div>
-
-          <div class="cv-block reveal" style="--d: 60ms">
-            <h3 class="mono cv-label"><span data-lang="en">Research</span><span data-lang="zh">科研经历</span></h3>
-            <div class="cv-entry">
-              <div class="cv-entry-head">
-                <strong>THUIR · Tsinghua</strong>
-                <span class="mono">2026.06 —</span>
-              </div>
-              <p class="cv-sub"><span data-lang="en">Undergraduate Researcher</span><span data-lang="zh">本科生科研</span></p>
-              <p class="cv-desc">
-                <span data-lang="en">LLM memory and evaluation; continual learning from long-horizon feedback.</span>
-                <span data-lang="zh">大模型记忆与评测；长程反馈驱动的持续学习。</span>
-              </p>
-            </div>
-          </div>
-
-          <div class="cv-block reveal" style="--d: 120ms">
-            <h3 class="mono cv-label"><span data-lang="en">Skills</span><span data-lang="zh">技能</span></h3>
-            <ul class="skill-list">
-              <li><span class="mono">Languages</span><span>Python · Java · C++</span></li>
-              <li><span class="mono">ML</span><span>PyTorch · Hugging Face</span></li>
-              <li><span class="mono">Tools</span><span>Git · Linux</span></li>
-            </ul>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
     <!-- ─────────────────────────── CONTACT ─────────────────────────── -->
     <section class="section contact" id="contact">
       <div class="wrap">
         <p class="eyebrow reveal"><span class="section-no">06</span><span data-lang="en">Contact</span><span data-lang="zh">联系</span></p>
         <h2 class="contact-title reveal">
-          <span data-lang="en">Let’s build systems<br>that <em>remember better.</em></span>
-          <span data-lang="zh">一起做<br><em>记得更好</em>的系统。</span>
+          <span data-lang="en">Get in touch.</span>
+          <span data-lang="zh">联系我。</span>
         </h2>
 
         <p class="contact-note reveal">
-          <span data-lang="en">I am always happy to talk about evaluation, memory, retrieval, or a paper worth reading.</span>
-          <span data-lang="zh">欢迎交流评测、记忆、检索，或者一篇值得读的论文。</span>
+          <span data-lang="en">Email is the best way to reach me.</span>
+          <span data-lang="zh">可以通过邮件与我联系。</span>
         </p>
 
         <div class="contact-rows reveal">
@@ -574,6 +559,6 @@
     <span data-lang="en">Email copied to clipboard</span><span data-lang="zh">邮箱已复制到剪贴板</span>
   </div>
 
-  <script src="assets/js/main.js?v=restore-sections" defer></script>
+  <script src="assets/js/main.js?v=cv-contact" defer></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 
 ## 设计说明
 
-整体采用「学术索引卡 × 编辑排版」的方向：暖纸底色、衬线大标题、细线网格、印章红与暗金点缀。信息结构遵循主流学术主页的惯例（About / News / Research / Projects / CV / Contact），但视觉与交互做了更精致的处理：
+整体采用「学术索引卡 × 编辑排版」的方向：暖纸底色、衬线大标题、细线网格、印章红与暗金点缀。信息结构遵循主流学术主页的惯例（About / News / CV / Research / Projects / Contact），但视觉与交互做了更精致的处理：
 
 - 中英双语切换（`EN / 中`），偏好保存在 localStorage
 - 明暗主题切换，跟随系统偏好，可手动覆盖
@@ -189,3 +189,12 @@ Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自
 - 其他区域保留当前状态；本轮仅恢复上述两个区域，不新增视觉或交互效果。
 
 ![恢复后的项目区域](assets/img/restored-projects-desktop.jpg)
+
+
+### 2026-10-22 · 简历前移与联系文案
+
+- CV 移至 News 之后，编号改为 03；Research、Selected projects 顺延为 04、05，导航与滚动定位顺序同步。
+- 移除 Skills 及技能列表，去掉 Education、Research 分组标题；教育与科研经历合并为单列连续条目，保留原有经历、时间和描述。
+- 联系区改为 “Get in touch.” 和 “Email is the best way to reach me.”，同步更新中文文案。
+
+![前移后的单列简历](assets/img/cv-single-column.jpg)

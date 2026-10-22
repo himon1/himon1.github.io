@@ -168,7 +168,7 @@
   });
 
   /* ── Header, progress, scroll spy ────────────────────────────────────── */
-  var sectionIds = ['about', 'news', 'research', 'projects', 'cv', 'contact'];
+  var sectionIds = ['about', 'news', 'cv', 'research', 'projects', 'contact'];
   var sectionLinks = {};
   sectionIds.forEach(function (id) {
     sectionLinks[id] = Array.prototype.slice.call(

@@ -1290,26 +1290,16 @@ details[open] .plus { transform: rotate(45deg); }
 .projects-foot { margin-top: 30px; text-align: right; }
 
 /* ── CV ─────────────────────────────────────────────────────────────────── */
-.cv-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 38px clamp(26px, 4.5vw, 56px);
-}
-.cv-block { border-top: 1px solid var(--gold-line); padding-top: 17px; }
-.cv-label {
-  display: block;
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  margin-bottom: 18px;
-}
+.cv-list { display: flex; flex-direction: column; }
+.cv-entry { padding-block: 26px; border-top: 1px solid var(--gold-line); }
+.cv-entry:last-child { border-bottom: 1px solid var(--rule); }
 .cv-entry-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
 }
-.cv-entry-head strong {
+.cv-entry-head h3 {
   font-family: var(--serif);
   font-size: 21px;
   font-weight: 500;
@@ -1324,18 +1314,6 @@ details[open] .plus { transform: rotate(45deg); }
   margin-top: 3px;
 }
 .cv-desc { font-size: 13px; line-height: 1.72; color: var(--muted); margin-top: 8px; }
-.skill-list li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 7px 0;
-  border-bottom: 1px dotted var(--rule);
-  font-size: 13px;
-  color: var(--ink-2);
-}
-.skill-list .mono { color: var(--faint); font-size: 9px; }
-
 /* ── Contact ────────────────────────────────────────────────────────────── */
 .contact {
   overflow: hidden;
@@ -1677,7 +1655,6 @@ html[data-theme="dark"] :is(#research, #projects) {
   .section-note { display: none; }
   .project-grid { grid-template-columns: 1fr; }
   .project-card { min-height: 0; }
-  .cv-grid { grid-template-columns: 1fr; gap: 30px; }
 
   html:not(.js) .site-header { position: relative; height: auto; }
   html:not(.js) .header-inner { flex-wrap: wrap; padding-block: 16px; }
@@ -1700,7 +1677,6 @@ html[data-theme="dark"] :is(#research, #projects) {
   .research-meta { gap: 6px 12px; }
   .research-body > p { font-size: 14.5px; }
 
-  .cv-grid { grid-template-columns: 1fr; gap: 34px; }
   .about-side { grid-template-columns: 1fr; gap: 26px; }
 
   .contact-row { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; padding: 15px 0; }
