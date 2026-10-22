@@ -198,3 +198,10 @@ Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自
 - 联系区改为 “Get in touch.” 和 “Email is the best way to reach me.”，同步更新中文文案。
 
 ![前移后的单列简历](assets/img/cv-single-column.jpg)
+
+### 2026-10-22 · 简历身份与院系名称
+
+- 第 03 节教育身份改为 Undergraduate，院系使用全称 Department of Computer Science and Technology。
+- THUIR 经历的身份改为 Research Intern，中文同步改为科研实习生。
+
+![简历身份与院系名称](assets/img/cv-affiliation.jpg)
