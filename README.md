@@ -1,6 +1,6 @@
 # himon1.github.io
 
-郝木（Hao Mu）的个人学术主页。纯静态、零依赖、零构建：HTML + CSS + 原生 JavaScript，直接由 GitHub Pages 托管。
+郝木（Mu Hao）的个人学术主页。纯静态、零依赖、零构建：HTML + CSS + 原生 JavaScript，直接由 GitHub Pages 托管。
 
 线上地址：<https://himon1.github.io>
 
@@ -79,7 +79,7 @@ python -m http.server 8000
 
 ### 4. 换头像 / 添加照片
 
-当前主视觉是「木」字印章与档案卡，不依赖照片。若要加人像，可在 hero 的档案卡中插入 `<img>`，或参考 `.mark` 的结构替换。建议使用 4:5 竖图、小于 300KB 的 WebP。
+当前主视觉是刻度式同心环与个人概况卡，不依赖照片。环形使用内联 SVG，颜色跟随主题变量；需保持 `.mark` 的边界留白。若要加人像，可在 hero 的概况卡中插入 `<img>`。建议使用 4:5 竖图、小于 300KB 的 WebP。
 
 ### 5. 更新简历
 
@@ -127,3 +127,15 @@ git push -u origin main
 ## 字体授权
 
 Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自托管与再分发。字体文件位于 `assets/fonts/`。
+
+## 版本记录
+
+### 2026-10-22 · 个人介绍与交互细节
+
+- 以电脑端为主要设计与验收对象；保留暖纸、朱红、暗金和原有章节结构。
+- 英文姓名统一为 Mu Hao。首屏改为较小的直立衬线姓名、问候语及身份说明，英文不并列中文名；页头去掉 Index。
+- 个人概况卡保留随主题变化的纸感，环形细化为刻度、分段弧线和节点，并留出完整边界。
+- 跑马灯及项目卡片内容、结构保持原样，新增项目继续复用现有卡片，无须绘制专用图片。
+- 调整暗色小字对比、悬停幅度、章节跳转留白、焦点反馈；完善导航、复制反馈及无脚本时的可读性。
+- 分享图由 `assets/img/social-card.svg` 维护，PNG 对应 `social-card.png`；旧 `og.png` 保留。
+- `Newsreader Upright` 使用现有 `newsreader-italic-latin.woff2`：该文件内置字形实际为 Regular，其文件名沿用原仓库。

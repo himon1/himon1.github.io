@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<defs><radialGradient id="wash"><stop stop-color="#a5834e" stop-opacity=".10"/><stop offset="1" stop-color="#f7f4ec" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="630" fill="#f7f4ec"/><ellipse cx="1000" cy="200" rx="470" ry="420" fill="url(#wash)"/>
+<g stroke="#17150f" stroke-opacity=".16"><path d="M72 66h1056M72 564h1056"/></g>
+<rect x="72" y="94" width="32" height="32" rx="5" fill="#b03a2a"/><path d="M88 101v19m-9-13h18m-9 3-8 10m8-10 8 10" fill="none" stroke="#f7f4ec" stroke-width="1.5" stroke-linecap="round"/>
+<g font-family="Consolas,monospace" font-size="12" letter-spacing="2" fill="#6f6757"><text x="122" y="115">PERSONAL WEBSITE</text><text x="1128" y="115" text-anchor="end">HIMON1.GITHUB.IO</text><text x="72" y="530">MEMORY · EVALUATION · CONTINUAL LEARNING</text></g>
+<text x="72" y="208" font-family="Consolas,monospace" font-size="12" letter-spacing="2" fill="#7f6236">HELLO, I’M</text>
+<text x="67" y="312" font-family="Georgia,serif" font-size="96" letter-spacing="-3" fill="#17150f">Mu Hao</text>
+<text x="72" y="364" font-family="Arial,sans-serif" font-size="19" fill="#6f6757">Undergraduate researcher · Tsinghua University</text>
+<text x="72" y="426" font-family="Georgia,serif" font-size="26" fill="#403b31">Language models, memory &amp; the long horizon.</text>
+</svg>

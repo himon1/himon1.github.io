@@ -3,27 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hao Mu · LLM Evaluation &amp; Memory</title>
-  <meta name="description" content="Hao Mu (郝木) is an undergraduate in Computer Science at Tsinghua University, working on large language model evaluation, memory, and long-horizon feedback learning at THUIR.">
-  <meta name="author" content="Hao Mu">
+  <title>Mu Hao · LLM Evaluation &amp; Memory</title>
+  <meta name="description" content="Mu Hao is an undergraduate in Computer Science at Tsinghua University, working on large language model evaluation, memory, and long-horizon feedback learning at THUIR.">
+  <meta name="author" content="Mu Hao">
   <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#101110" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#111210" media="(prefers-color-scheme: dark)">
 
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="Hao Mu · LLM Evaluation &amp; Memory">
+  <meta property="og:title" content="Mu Hao · LLM Evaluation &amp; Memory">
   <meta property="og:description" content="Undergraduate researcher at Tsinghua University working on language model evaluation, memory, and continual learning.">
   <meta property="og:url" content="https://himon1.github.io/">
-  <meta property="og:image" content="https://himon1.github.io/assets/img/og.png">
+  <meta property="og:image" content="https://himon1.github.io/assets/img/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Hao Mu · LLM Evaluation &amp; Memory">
+  <meta name="twitter:title" content="Mu Hao · LLM Evaluation &amp; Memory">
   <meta name="twitter:description" content="Undergraduate researcher at Tsinghua University working on language model evaluation, memory, and continual learning.">
-  <meta name="twitter:image" content="https://himon1.github.io/assets/img/og.png">
+  <meta name="twitter:image" content="https://himon1.github.io/assets/img/social-card.png">
 
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/newsreader-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/style.css">
 
@@ -32,7 +33,7 @@
     (function () {
       try {
         var t = localStorage.getItem('hm-theme');
-        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t !== 'light' && t !== 'dark') t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', t);
         var l = localStorage.getItem('hm-lang');
         if (l === 'zh' || l === 'en') document.documentElement.setAttribute('lang', l);
@@ -44,7 +45,7 @@
     {
       "@context": "https://schema.org",
       "@type": "Person",
-      "name": "Hao Mu",
+      "name": "Mu Hao",
       "alternateName": "郝木",
       "url": "https://himon1.github.io/",
       "email": "haom25@mails.tsinghua.edu.cn",
@@ -67,7 +68,6 @@
             <path d="M32 13v38"/><path d="M16 26h32"/><path d="M32 31 19 52"/><path d="M32 31 45 52"/>
           </g>
         </svg>
-        <span class="brand-name">Index</span>
       </a>
 
       <nav class="nav" id="primaryNav" aria-label="Sections">
@@ -95,6 +95,8 @@
     <div class="read-progress" aria-hidden="true"><span id="progressBar"></span></div>
   </header>
 
+  <div class="menu-backdrop" id="menuBackdrop" hidden aria-hidden="true"></div>
+
   <nav class="side-rail" id="sideRail" aria-label="Section index">
     <a href="#about" data-section="about"><span class="rail-label"><span data-lang="en">About</span><span data-lang="zh">关于</span></span><span class="rail-dot"></span></a>
     <a href="#news" data-section="news"><span class="rail-label"><span data-lang="en">News</span><span data-lang="zh">动态</span></span><span class="rail-dot"></span></a>
@@ -117,15 +119,19 @@
       <div class="wrap hero-grid">
         <div class="hero-main">
           <p class="eyebrow hero-eyebrow">
-            <span class="pulse-dot" aria-hidden="true"></span>
-            <span data-lang="en">Undergraduate researcher · Tsinghua University</span>
-            <span data-lang="zh">清华大学 · 计算机系本科生</span>
+            <span data-lang="en">Hello, I’m</span>
+            <span data-lang="zh">你好，我是</span>
           </p>
 
           <h1 class="hero-title">
-            <span data-lang="en">Hao&nbsp;Mu</span>
+            <span data-lang="en">Mu Hao</span>
             <span data-lang="zh">郝木</span>
           </h1>
+
+          <p class="hero-role">
+            <span data-lang="en">Undergraduate researcher · Tsinghua University</span>
+            <span data-lang="zh">清华大学 · 计算机系本科生</span>
+          </p>
 
           <p class="hero-sub">
             <span data-lang="en">Language models, memory &amp; the long horizon</span>
@@ -151,14 +157,30 @@
         <aside class="dossier" id="dossier" aria-label="Profile card">
           <div class="dossier-glow" aria-hidden="true"></div>
           <div class="dossier-head">
-            <span class="mono">Research index</span>
+            <span class="mono"><span data-lang="en">At a glance</span><span data-lang="zh">个人概况</span></span>
             <span class="mono">2026 / 27</span>
           </div>
 
           <div class="mark" aria-hidden="true">
-            <div class="mark-ring"></div>
-            <div class="mark-ring mark-ring-outer"></div>
-            <div class="mark-core"></div>
+            <svg class="memory-dial" viewBox="0 0 300 228" fill="none">
+              <path class="dial-axis" d="M40 112h220M150 5v214"/>
+              <path class="dial-ticks" d="M150.00 21.00l0.00 -8.00M159.93 17.52l0.42 -3.98M169.75 19.08l0.83 -3.91M179.36 21.65l1.24 -3.80M188.64 25.21l1.63 -3.65M195.50 33.19l4.00 -6.93M205.84 35.14l2.35 -3.24M213.57 41.40l2.68 -2.97M220.60 48.43l2.97 -2.68M226.86 56.16l3.24 -2.35M228.81 66.50l6.93 -4.00M236.79 73.36l3.65 -1.63M240.35 82.64l3.80 -1.24M242.92 92.25l3.91 -0.83M244.48 102.07l3.98 -0.42M241.00 112.00l8.00 0.00M244.48 121.93l3.98 0.42M242.92 131.75l3.91 0.83M240.35 141.36l3.80 1.24M236.79 150.64l3.65 1.63M228.81 157.50l6.93 4.00M226.86 167.84l3.24 2.35M220.60 175.57l2.97 2.68M213.57 182.60l2.68 2.97M205.84 188.86l2.35 3.24M195.50 190.81l4.00 6.93M188.64 198.79l1.63 3.65M179.36 202.35l1.24 3.80M169.75 204.92l0.83 3.91M159.93 206.48l0.42 3.98M150.00 203.00l0.00 8.00M140.07 206.48l-0.42 3.98M130.25 204.92l-0.83 3.91M120.64 202.35l-1.24 3.80M111.36 198.79l-1.63 3.65M104.50 190.81l-4.00 6.93M94.16 188.86l-2.35 3.24M86.43 182.60l-2.68 2.97M79.40 175.57l-2.97 2.68M73.14 167.84l-3.24 2.35M71.19 157.50l-6.93 4.00M63.21 150.64l-3.65 1.63M59.65 141.36l-3.80 1.24M57.08 131.75l-3.91 0.83M55.52 121.93l-3.98 0.42M59.00 112.00l-8.00 0.00M55.52 102.07l-3.98 -0.42M57.08 92.25l-3.91 -0.83M59.65 82.64l-3.80 -1.24M63.21 73.36l-3.65 -1.63M71.19 66.50l-6.93 -4.00M73.14 56.16l-3.24 -2.35M79.40 48.43l-2.97 -2.68M86.43 41.40l-2.68 -2.97M94.16 35.14l-2.35 -3.24M104.50 33.19l-4.00 -6.93M111.36 25.21l-1.63 -3.65M120.64 21.65l-1.24 -3.80M130.25 19.08l-0.83 -3.91M140.07 17.52l-0.42 -3.98"/>
+              <circle class="dial-guide" cx="150" cy="112" r="83"/>
+              <circle class="dial-guide" cx="150" cy="112" r="61"/>
+              <circle class="dial-guide" cx="150" cy="112" r="39"/>
+              <circle class="dial-dashes" cx="150" cy="112" r="72" stroke-dasharray="1 6"/>
+              <g class="dial-orbit">
+                <path class="dial-arc" d="M161.55 29.81A83 83 0 0 1 221.88 70.50"/>
+                <path class="dial-arc" d="M174.81 167.73A61 61 0 0 1 108.40 156.61"/>
+                <circle class="dial-node" cx="221.88" cy="70.5" r="3.5"/>
+                <circle class="dial-node" cx="108.24" cy="156.52" r="3"/>
+              </g>
+              <path class="dial-accent" d="M115.57 130.31A39 39 0 0 1 139.25 74.51"/>
+              <path class="dial-link" d="M150 73v-22m33 41 19-12m-84 53-20 13"/>
+              <circle class="dial-core" cx="150" cy="112" r="17"/>
+              <circle class="dial-center" cx="150" cy="112" r="3"/>
+              <text class="dial-label" x="150" y="226" text-anchor="middle">MEMORY / FEEDBACK / EVALUATION</text>
+            </svg>
           </div>
 
           <dl class="dossier-rows">
@@ -525,7 +547,7 @@
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <span class="mono">© <span id="year">2026</span> Hao Mu</span>
+      <span class="mono">© <span id="year">2026</span> Mu Hao</span>
       <span class="mono footer-mid"><span data-lang="en">Last updated October 2026</span><span data-lang="zh">更新于 2026 年 10 月</span></span>
       <a class="mono back-top" href="#top"><span data-lang="en">Back to top</span><span data-lang="zh">回到顶部</span> ↑</a>
     </div>
