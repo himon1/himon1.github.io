@@ -71,7 +71,19 @@
   --surface-edge: rgba(255, 255, 255, 0.7);
   --surface-light: rgba(255, 255, 255, 0.45);
   --surface-shade: rgba(23, 21, 15, 0.12);
-  --surface-glow: rgba(165, 131, 78, 0.12);
+  --surface-glow: rgba(165, 131, 78, 0.22);
+  --closing-paper: #1d1d19;
+  --closing-surface: #272720;
+  --closing-ink: #f0eadc;
+  --closing-ink-2: #d1c9b8;
+  --closing-muted: #b2aa96;
+  --closing-gold: #c8ab78;
+  --closing-gold-ink: #e4cda3;
+  --closing-rule: rgba(240, 234, 220, 0.16);
+  --closing-gold-line: rgba(200, 171, 120, 0.46);
+  --closing-gold-soft: rgba(200, 171, 120, 0.1);
+  --closing-accent: #e1a08a;
+  --closing-accent-soft: rgba(225, 160, 138, 0.07);
 
   --serif: "Newsreader", "Noto Serif SC", "Songti SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
   --sans: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -105,7 +117,9 @@ html[data-theme="dark"] {
   --surface-edge: rgba(255, 249, 230, 0.065);
   --surface-light: rgba(255, 249, 230, 0.08);
   --surface-shade: rgba(0, 0, 0, 0.4);
-  --surface-glow: rgba(211, 176, 119, 0.065);
+  --surface-glow: rgba(211, 176, 119, 0.14);
+  --closing-paper: #10110e;
+  --closing-surface: #191b16;
   color-scheme: dark;
 }
 
@@ -455,7 +469,9 @@ body.menu-open .menu-btn span:last-child { transform: translateY(-3px) rotate(-4
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(520px circle at var(--light-x, 70%) var(--light-y, 42%), var(--gold-soft), transparent 75%);
+  background:
+    radial-gradient(600px circle at var(--light-x, 70%) var(--light-y, 42%), var(--surface-glow), transparent 75%),
+    linear-gradient(115deg, transparent 38%, var(--gold-soft) 50%, transparent 62%);
   opacity: 0;
   transition: opacity 1s var(--ease);
 }
@@ -584,6 +600,19 @@ html[data-theme="dark"] .hero-watermark { opacity: 0.08; }
   margin-top: 14px;
   animation: rise 0.9s 0.08s var(--ease) both;
 }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-title > span {
+    background: linear-gradient(110deg, var(--ink) 35%, var(--gold-ink) 50%, var(--ink) 65%);
+    background-size: 300% 100%;
+    background-position: 100% 50%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: background-position 1.3s var(--ease);
+  }
+  .hero-title:hover > span { background-position: 0 50%; }
+  .hero-title > span::selection { color: var(--paper); }
+}
 html[lang="zh"] .hero-title {
   letter-spacing: 0.02em;
   font-size: clamp(3.5rem, 5.8vw, 5rem);
@@ -631,6 +660,7 @@ html[lang="zh"] .hero-title {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  transform: translate3d(var(--pull-x, 0px), var(--pull-y, 0px), 0);
   border-radius: 2px;
   display: inline-flex;
   align-items: center;
@@ -655,12 +685,12 @@ html[lang="zh"] .hero-title {
   transition: transform 0.8s var(--ease);
 }
 .btn:hover::after, .btn:focus-visible::after { transform: translateX(110%); }
-.btn:active { transform: translateY(0) scale(0.985); }
+.btn:active { transform: translate3d(var(--pull-x, 0px), var(--pull-y, 0px), 0) scale(0.97); }
 .btn:hover {
   color: var(--paper-2);
   background: var(--ink);
   border-color: var(--ink);
-  transform: translateY(-1px);
+  transform: translate3d(var(--pull-x, 0px), calc(var(--pull-y, 0px) - 2px), 0);
 }
 .btn-primary {
   color: var(--paper-2);
@@ -732,19 +762,26 @@ html[lang="zh"] .hero-title {
   padding: 12px 0 18px;
   overflow: hidden;
 }
+.mark.is-interactive { cursor: grab; touch-action: pan-y; }
+.mark.is-dragging { cursor: grabbing; }
+.mark.is-dragging .dial-orbit { animation-play-state: paused; }
+.mark.is-interactive:hover .dial-ticks { opacity: 1; }
+.mark.is-interactive:hover .dial-core { stroke: var(--accent); fill: var(--gold-soft); }
+.mark.is-interactive:hover .dial-node { fill: var(--gold-ink); }
 .memory-dial { width: min(100%, 280px); height: 100%; overflow: hidden; }
 .dial-axis { stroke: var(--rule); stroke-width: 0.7; stroke-dasharray: 2 5; }
-.dial-ticks { stroke: var(--gold); stroke-width: 0.7; opacity: 0.65; }
+.dial-ticks { stroke: var(--gold); stroke-width: 0.7; opacity: 0.65; transition: opacity 0.35s; }
 .dial-guide { stroke: var(--rule-strong); stroke-width: 0.7; }
 .dial-dashes { stroke: var(--gold-line); stroke-width: 0.8; }
 .dial-arc { stroke: var(--gold); stroke-width: 1.3; stroke-linecap: round; }
 .dial-node { fill: var(--gold); stroke: var(--paper-2); stroke-width: 1.5; }
 .dial-accent { stroke: var(--accent); stroke-width: 1.1; stroke-linecap: round; }
 .dial-link { stroke: var(--gold-line); stroke-width: 0.7; }
-.dial-core { fill: var(--accent-soft); stroke: var(--gold-line); stroke-width: 0.7; }
+.dial-core { fill: var(--accent-soft); stroke: var(--gold-line); stroke-width: 0.7; transition: fill 0.35s, stroke 0.35s; }
 .dial-center { fill: var(--accent); }
-.dial-label { font-family: var(--mono); font-size: 5px; letter-spacing: 1.2px; fill: var(--muted); }
+.dial-input { transform-origin: 150px 112px; transform: rotate(var(--dial-angle, 0deg)); }
 .dial-orbit { transform-origin: 150px 112px; animation: spin 45s linear infinite; }
+.dial-counter { transform-origin: 150px 112px; animation: spin 62s linear infinite reverse; }
 
 .dossier-rows { border-top: 1px solid var(--rule); }
 .dossier-rows > div {
@@ -916,13 +953,13 @@ html[lang="zh"] .section-title { letter-spacing: 0.02em; }
   opacity: 1;
   transform: none;
 }
-.reveal-ready .reveal {
+:where(.reveal-ready) .reveal {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
   transition-delay: var(--d, 0ms);
 }
-.reveal-ready .reveal.is-in { opacity: 1; transform: none; }
+:where(.reveal-ready) .reveal.is-in { opacity: 1; transform: none; }
 
 /* ── About ──────────────────────────────────────────────────────────────── */
 .about-grid {
@@ -1198,29 +1235,34 @@ details[open] .plus { transform: rotate(45deg); }
 .project-card::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: 2;
-  width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, var(--gold-line), var(--gold), var(--gold-line));
-  transition: width 0.65s var(--ease);
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 30%), var(--gold), var(--gold-line) 55%, transparent 90%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
 }
 .project-card::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 30%), var(--surface-glow), transparent 75%);
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), var(--surface-glow), transparent 75%);
   opacity: 0;
   transition: opacity 0.5s var(--ease);
   pointer-events: none;
 }
-.project-card:hover::before, .project-card:focus-visible::before { width: 100%; }
+.project-card:hover::before, .project-card:focus-visible::before { opacity: 1; }
 .project-card:hover::after, .project-card:focus-visible::after { opacity: 1; }
 .project-card > * { position: relative; z-index: 1; }
 .project-card:hover, .project-card:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(-7px);
   border-color: var(--gold-line);
   box-shadow: inset 0 1px 0 var(--surface-edge), var(--shadow);
   background: var(--paper-2);
@@ -1320,7 +1362,26 @@ details[open] .plus { transform: rotate(45deg); }
 .skill-list .mono { color: var(--faint); font-size: 9px; }
 
 /* ── Contact ────────────────────────────────────────────────────────────── */
+.contact, .site-footer {
+  --paper: var(--closing-paper);
+  --paper-2: var(--closing-surface);
+  --ink: var(--closing-ink);
+  --ink-2: var(--closing-ink-2);
+  --muted: var(--closing-muted);
+  --faint: var(--closing-muted);
+  --rule: var(--closing-rule);
+  --rule-strong: var(--closing-rule);
+  --gold: var(--closing-gold);
+  --gold-ink: var(--closing-gold-ink);
+  --gold-line: var(--closing-gold-line);
+  --gold-soft: var(--closing-gold-soft);
+  --accent: var(--closing-accent);
+  --accent-soft: var(--closing-accent-soft);
+  color: var(--ink);
+  background-color: var(--paper);
+}
 .contact {
+  background-image: radial-gradient(ellipse at 85% 20%, var(--gold-soft), transparent 65%);
   overflow: hidden;
   padding-bottom: clamp(84px, 11vw, 140px);
 }
@@ -1481,9 +1542,10 @@ a.contact-value:hover, a.contact-value:focus-visible { color: var(--gold-ink); b
 .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 
 /* ── Motion ─────────────────────────────────────────────────────────────── */
-::view-transition-group(root) { animation-duration: 0.28s; animation-timing-function: ease; }
-::view-transition-new(root) { mix-blend-mode: normal; }
-.hero.is-dormant .aurora, .hero.is-dormant .dial-orbit { animation-play-state: paused; }
+::view-transition-group(root) { animation: none; }
+::view-transition-old(root) { animation: none; z-index: 1; }
+::view-transition-new(root) { mix-blend-mode: normal; z-index: 2; animation: theme-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero.is-dormant .aurora, .hero.is-dormant .dial-orbit, .hero.is-dormant .dial-counter { animation-play-state: paused; }
 
 @supports (interpolate-size: allow-keywords) {
   .research-more { interpolate-size: allow-keywords; }
@@ -1516,6 +1578,10 @@ a.contact-value:hover, a.contact-value:focus-visible { color: var(--gold-ink); b
 @keyframes rise {
   from { opacity: 0; transform: translateY(22px); }
   to { opacity: 1; transform: none; }
+}
+@keyframes theme-reveal {
+  from { clip-path: circle(0px at var(--theme-x, 90vw) var(--theme-y, 35px)); }
+  to { clip-path: circle(var(--theme-radius, 150vmax) at var(--theme-x, 90vw) var(--theme-y, 35px)); }
 }
 @keyframes fade {
   from { opacity: 0; }
@@ -1671,6 +1737,7 @@ a.contact-value:hover, a.contact-value:focus-visible { color: var(--gold-ink); b
   .toast,
   .copy-btn { display: none !important; }
   body { background: #fff; color: #000; }
+  .contact, .site-footer { background: none; --ink: #000; --ink-2: #333; --muted: #555; --paper: #fff; --paper-2: #fff; }
   body::after { display: none; }
   .hero { min-height: auto; padding-top: 0; }
   .section { padding-block: 28px; page-break-inside: avoid; }

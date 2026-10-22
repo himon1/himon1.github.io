@@ -26,7 +26,7 @@
   <link rel="preload" href="assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/newsreader-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=interactive-2">
 
   <script>
     // Apply the saved theme and language before first paint to avoid a flash.
@@ -169,17 +169,18 @@
               <circle class="dial-guide" cx="150" cy="112" r="61"/>
               <circle class="dial-guide" cx="150" cy="112" r="39"/>
               <circle class="dial-dashes" cx="150" cy="112" r="72" stroke-dasharray="1 6"/>
-              <g class="dial-orbit">
-                <path class="dial-arc" d="M161.55 29.81A83 83 0 0 1 221.88 70.50"/>
-                <path class="dial-arc" d="M174.81 167.73A61 61 0 0 1 108.40 156.61"/>
-                <circle class="dial-node" cx="221.88" cy="70.5" r="3.5"/>
-                <circle class="dial-node" cx="108.24" cy="156.52" r="3"/>
+              <g class="dial-input">
+                <g class="dial-orbit">
+                  <path class="dial-arc" d="M161.55 29.81A83 83 0 0 1 221.88 70.50"/>
+                  <path class="dial-arc" d="M174.81 167.73A61 61 0 0 1 108.40 156.61"/>
+                  <circle class="dial-node" cx="221.88" cy="70.5" r="3.5"/>
+                  <circle class="dial-node" cx="108.24" cy="156.52" r="3"/>
+                </g>
               </g>
-              <path class="dial-accent" d="M115.57 130.31A39 39 0 0 1 139.25 74.51"/>
+              <g class="dial-counter"><path class="dial-accent" d="M115.57 130.31A39 39 0 0 1 139.25 74.51"/></g>
               <path class="dial-link" d="M150 73v-22m33 41 19-12m-84 53-20 13"/>
               <circle class="dial-core" cx="150" cy="112" r="17"/>
               <circle class="dial-center" cx="150" cy="112" r="3"/>
-              <text class="dial-label" x="150" y="226" text-anchor="middle">MEMORY / FEEDBACK / EVALUATION</text>
             </svg>
           </div>
 
@@ -557,6 +558,6 @@
     <span data-lang="en">Email copied to clipboard</span><span data-lang="zh">邮箱已复制到剪贴板</span>
   </div>
 
-  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/main.js?v=interactive-2" defer></script>
 </body>
 </html>

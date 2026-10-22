@@ -27,6 +27,7 @@
   var pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
   var reduceMotion = motionQuery.matches;
   var themeTransition = null;
+  var fallbackThemeAnimation = null;
 
   /* ── Theme ───────────────────────────────────────────────────────────── */
   function applyTheme(next, persist) {
@@ -46,17 +47,28 @@
   }
 
   if (themeToggle) {
-    themeToggle.addEventListener('click', function () {
+    themeToggle.addEventListener('click', function (event) {
       var next = theme === 'dark' ? 'light' : 'dark';
+      var rect = themeToggle.getBoundingClientRect();
+      var x = event.detail ? event.clientX : rect.left + rect.width / 2;
+      var y = event.detail ? event.clientY : rect.top + rect.height / 2;
+      root.style.setProperty('--theme-x', x + 'px');
+      root.style.setProperty('--theme-y', y + 'px');
+      root.style.setProperty('--theme-radius', (Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 2) + 'px');
       if (themeTransition) themeTransition.skipTransition();
+      if (fallbackThemeAnimation) fallbackThemeAnimation.cancel();
       if (document.startViewTransition && !reduceMotion) {
         var transition = document.startViewTransition(function () { applyTheme(next, true); });
         themeTransition = transition;
+        transition.ready.catch(function () {});
         transition.finished.catch(function () {}).then(function () {
           if (themeTransition === transition) themeTransition = null;
         });
       } else {
         applyTheme(next, true);
+        if (!reduceMotion && body.animate) {
+          fallbackThemeAnimation = body.animate([{ opacity: 0.72 }, { opacity: 1 }], { duration: 320, easing: 'ease-out' });
+        }
       }
     });
   }
@@ -80,6 +92,7 @@
     closeMenu();
     applyTheme(theme, false);
     if (copyEmail) copyEmail.setAttribute('aria-label', lang === 'zh' ? '复制邮箱地址' : 'Copy email address');
+    if (dialStage && dialStage.classList.contains('is-interactive')) dialStage.setAttribute('title', lang === 'zh' ? '拖动旋转' : 'Drag to rotate');
     if (sectionIds) requestScroll();
   }
 
@@ -288,8 +301,9 @@
 
   /* ── Surface light: one update per animation frame, no background loop ── */
   var dossier = document.getElementById('dossier');
+  var dialStage = document.querySelector('.mark');
   var surfaceResets = [];
-  document.querySelectorAll('.dossier, .project-card').forEach(function (surface) {
+  document.querySelectorAll('.dossier, .project-card, .btn').forEach(function (surface) {
     var frame = null;
     var x = 0;
     var y = 0;
@@ -299,6 +313,8 @@
       frame = null;
       surface.style.removeProperty('--mx');
       surface.style.removeProperty('--my');
+      surface.style.removeProperty('--pull-x');
+      surface.style.removeProperty('--pull-y');
       if (surface === dossier) surface.style.transform = '';
     }
 
@@ -314,7 +330,11 @@
         var py = Math.max(0, Math.min(1, (y - rect.top) / rect.height));
         surface.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
         surface.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-        if (surface === dossier) {
+        if (surface.classList.contains('btn')) {
+          surface.style.setProperty('--pull-x', ((px - 0.5) * 10).toFixed(1) + 'px');
+          surface.style.setProperty('--pull-y', ((py - 0.5) * 6).toFixed(1) + 'px');
+        }
+        if (surface === dossier && !(dialStage && dialStage.classList.contains('is-dragging'))) {
           surface.style.transform = 'perspective(1200px) rotateX(' + ((0.5 - py) * 1.6).toFixed(2) + 'deg) rotateY(' + ((px - 0.5) * 2).toFixed(2) + 'deg)';
         }
       });
@@ -323,6 +343,80 @@
     surface.addEventListener('pointercancel', resetSurface);
     surfaceResets.push(resetSurface);
   });
+
+  /* Decorative dial: phase-preserving hover acceleration and direct rotation. */
+  if (dialStage) {
+    var dialPointer = null;
+    var previousAngle = 0;
+    var dialAngle = 0;
+    var dialFrame = null;
+
+    function setDialRate(rate) {
+      dialStage.querySelectorAll('.dial-orbit, .dial-counter').forEach(function (orbit) {
+        if (!orbit.getAnimations) return;
+        orbit.getAnimations().forEach(function (animation) {
+          if (animation.updatePlaybackRate) animation.updatePlaybackRate(rate);
+        });
+      });
+    }
+
+    function pointerAngle(event) {
+      var center = dialStage.querySelector('.dial-center').getBoundingClientRect();
+      return Math.atan2(event.clientY - center.top - center.height / 2, event.clientX - center.left - center.width / 2) * 180 / Math.PI;
+    }
+
+    function finishDial() {
+      if (dialFrame !== null) window.cancelAnimationFrame(dialFrame);
+      dialFrame = null;
+      dialStage.style.setProperty('--dial-angle', dialAngle.toFixed(2) + 'deg');
+      var pointer = dialPointer;
+      dialPointer = null;
+      dialStage.classList.remove('is-dragging');
+      if (pointer !== null && dialStage.hasPointerCapture(pointer)) dialStage.releasePointerCapture(pointer);
+      setDialRate(!reduceMotion && pointerQuery.matches && dialStage.matches(':hover') ? 2.2 : 1);
+    }
+
+    function updateDialAvailability() {
+      var enabled = !motionQuery.matches && pointerQuery.matches;
+      dialStage.classList.toggle('is-interactive', enabled);
+      if (enabled) dialStage.setAttribute('title', lang === 'zh' ? '拖动旋转' : 'Drag to rotate');
+      else dialStage.removeAttribute('title');
+      if (!enabled) finishDial();
+    }
+
+    dialStage.addEventListener('pointerenter', function () {
+      if (!reduceMotion && pointerQuery.matches) setDialRate(2.2);
+    });
+    dialStage.addEventListener('pointerleave', function () { setDialRate(1); });
+    dialStage.addEventListener('pointerdown', function (event) {
+      if (reduceMotion || !pointerQuery.matches || event.button !== 0) return;
+      dialPointer = event.pointerId;
+      if (dossier) dossier.style.transform = '';
+      previousAngle = pointerAngle(event);
+      dialStage.classList.add('is-dragging');
+      dialStage.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    });
+    dialStage.addEventListener('pointermove', function (event) {
+      if (event.pointerId !== dialPointer) return;
+      var angle = pointerAngle(event);
+      var delta = ((angle - previousAngle + 540) % 360) - 180;
+      dialAngle += delta;
+      previousAngle = angle;
+      if (dialFrame !== null) return;
+      dialFrame = window.requestAnimationFrame(function () {
+        dialFrame = null;
+        dialStage.style.setProperty('--dial-angle', dialAngle.toFixed(2) + 'deg');
+      });
+    });
+    dialStage.addEventListener('pointerup', finishDial);
+    dialStage.addEventListener('pointercancel', finishDial);
+    dialStage.addEventListener('lostpointercapture', function () { if (dialPointer !== null) finishDial(); });
+    pointerQuery.addEventListener('change', updateDialAvailability);
+    motionQuery.addEventListener('change', updateDialAvailability);
+    updateDialAvailability();
+    surfaceResets.push(finishDial);
+  }
 
   if (hero) {
     var heroFrame = null;
@@ -364,6 +458,7 @@
       if (hero) hero.style.removeProperty('--py');
       surfaceResets.forEach(function (reset) { reset(); });
       if (themeTransition) themeTransition.skipTransition();
+      if (fallbackThemeAnimation) fallbackThemeAnimation.cancel();
     }
   });
 
