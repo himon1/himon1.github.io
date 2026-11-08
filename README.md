@@ -218,3 +218,7 @@ Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自
 ### 2026-11-08 · 跑马灯关键词
 
 - 跑马灯移除 Information Retrieval，增加 Agent 和 RAG；两组循环内容同步，样式与滚动行为不变。
+
+### 2026-11-08 · 科研条目时间顺序
+
+- Research 中进行中的 CoAI / Terminal Agent Evaluation 前移为 01，THUIR / MemoryBench 后移为 02；正文、样式及交互不变。
