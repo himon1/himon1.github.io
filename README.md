@@ -214,3 +214,7 @@ Newsreader、Inter、JetBrains Mono 均采用 SIL Open Font License 1.1，可自
 - 保留英文界面、原有章节、布局、样式及交互；不添加学术成果、投稿信息或个人手机号，不上传简历原文件。
 
 ![简历内容同步后的项目区](assets/img/resume-content-preview-20261108.jpg)
+
+### 2026-11-08 · 跑马灯关键词
+
+- 跑马灯移除 Information Retrieval，增加 Agent 和 RAG；两组循环内容同步，样式与滚动行为不变。
